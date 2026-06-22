@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plugin Catalog</title>
+<style>
+  /* ---------- design tokens ---------- */
+  :root {
+    --bg: #f6f7fb;
+    --bg-soft: #eef0f7;
+    --surface: #ffffff;
+    --surface-2: #fbfbfe;
+    --border: #e6e8f0;
+    --border-strong: #d3d7e6;
+    --text: #14161f;
+    --text-soft: #565d72;
+    --text-faint: #8a90a6;
+    --accent: #5b5bf0;
+    --accent-2: #8b5cf6;
+    --accent-soft: #ecebff;
+    --accent-ring: rgba(91, 91, 240, 0.28);
+    --good: #18a558;
+    --good-soft: #e4f7ec;
+    --shadow-sm: 0 1px 2px rgba(20, 22, 31, 0.05), 0 1px 3px rgba(20, 22, 31, 0.04);
+    --shadow-md: 0 8px 24px rgba(20, 22, 31, 0.10);
+    --shadow-lg: 0 24px 60px rgba(20, 22, 31, 0.22);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --maxw: 1180px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0c12;
+      --bg-soft: #11131c;
+      --surface: #151723;
+      --surface-2: #1b1e2c;
+      --border: #262a3b;
+      --border-strong: #343a52;
+      --text: #f3f4fa;
+      --text-soft: #aeb4ca;
+      --text-faint: #767d99;
+      --accent: #8b8bff;
+      --accent-2: #b18bff;
+      --accent-soft: #1f2140;
+      --accent-ring: rgba(139, 139, 255, 0.32);
+      --good: #3ddc84;
+      --good-soft: #15301f;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    padding-bottom: 120px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- top hero / header ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(1200px 400px at 12% -20%, var(--accent-soft), transparent 60%),
+      radial-gradient(900px 360px at 92% -10%, rgba(139, 92, 246, 0.18), transparent 55%),
+      var(--bg-soft);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-inner {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 40px 24px 26px;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--accent);
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 999px; box-shadow: var(--shadow-sm);
+  }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.05; letter-spacing: -0.02em; margin: 16px 0 6px;
+    font-weight: 800;
+  }
+  h1 .grad {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .sub { color: var(--text-soft); font-size: 16px; max-width: 640px; margin: 0; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px; color: var(--text-faint); font-size: 13px; }
+  .meta-row b { color: var(--text); font-weight: 700; }
+
+  /* ---------- search + controls ---------- */
+  .controls {
+    position: sticky; top: 0; z-index: 30;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(160%) blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .controls-inner { max-width: var(--maxw); margin: 0 auto; padding: 14px 24px; }
+  .searchbar { display: flex; gap: 10px; align-items: center; }
+  .search-wrap { position: relative; flex: 1; }
+  .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-faint); }
+  #search {
+    width: 100%; font-size: 16px; font-family: var(--font);
+    padding: 13px 14px 13px 42px; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 12px; box-shadow: var(--shadow-sm); outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-ring); }
+  #search::placeholder { color: var(--text-faint); }
+
+  .sort {
+    font-family: var(--font); font-size: 14px; color: var(--text);
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow-sm); cursor: pointer;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+  .chip {
+    font-size: 13px; font-weight: 500; color: var(--text-soft);
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 999px; cursor: pointer; user-select: none;
+    transition: all .14s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text); }
+  .chip.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent; color: #fff; box-shadow: var(--shadow-sm);
+  }
+  .chip .n { font-size: 11px; opacity: .7; }
+  .chip.active .n { opacity: .85; }
+  .chip-clear { color: var(--accent); font-weight: 600; border-style: dashed; }
+
+  /* ---------- grid ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 22px 24px; }
+  .resultline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; color: var(--text-faint); font-size: 13px; }
+  .linkbtn { background: none; border: none; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
+  .linkbtn:hover { text-decoration: underline; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 18px 16px;
+    box-shadow: var(--shadow-sm); cursor: pointer;
+    transition: transform .14s, box-shadow .14s, border-color .14s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+  .card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring), var(--shadow-md); }
+  .card-top { display: flex; align-items: flex-start; gap: 12px; }
+  .check {
+    flex: 0 0 auto; width: 22px; height: 22px; border-radius: 7px;
+    border: 2px solid var(--border-strong); background: var(--surface-2);
+    display: grid; place-items: center; transition: all .14s; margin-top: 2px;
+  }
+  .card.selected .check { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+  .check svg { opacity: 0; transition: opacity .12s; }
+  .card.selected .check svg { opacity: 1; }
+  .card h3 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; word-break: break-word; }
+  .card .author { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+  .desc { color: var(--text-soft); font-size: 13.5px; margin: 12px 0 14px; flex: 1;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 11px; font-weight: 500; color: var(--text-soft);
+    background: var(--bg-soft); border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; }
+  .tag:hover { color: var(--accent); border-color: var(--accent); }
+  .badge-installed {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 11px; font-weight: 700; color: var(--good);
+    background: var(--good-soft); border: 1px solid color-mix(in srgb, var(--good) 30%, transparent);
+    padding: 3px 9px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .badge-installed .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); }
+  .ver { font-size: 11px; color: var(--text-faint); font-family: var(--mono); }
+
+  .empty { text-align: center; padding: 80px 20px; color: var(--text-faint); }
+  .empty .big { font-size: 48px; margin-bottom: 12px; }
+
+  /* ---------- sticky cart ---------- */
+  .cart {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(160%);
+    width: min(760px, calc(100% - 32px)); z-index: 40;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 18px; box-shadow: var(--shadow-lg);
+    padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+    transition: transform .26s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .cart.show { transform: translateX(-50%) translateY(0); }
+  .cart-count { font-weight: 700; font-size: 15px; white-space: nowrap; }
+  .cart-count small { color: var(--text-faint); font-weight: 500; }
+  .cart-spacer { flex: 1; }
+  .btn {
+    font: inherit; font-weight: 600; font-size: 14px; cursor: pointer;
+    border-radius: 11px; padding: 11px 16px; border: 1px solid var(--border-strong);
+    background: var(--surface-2); color: var(--text); transition: all .14s; white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--text-faint); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-soft); }
+  .btn-ghost:hover { color: var(--text); background: var(--bg-soft); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; border-color: transparent; box-shadow: var(--shadow-sm);
+  }
+  .btn-primary:hover { filter: brightness(1.06); }
+
+  /* ---------- modal ---------- */
+  .overlay {
+    position: fixed; inset: 0; z-index: 50; background: rgba(8, 9, 14, 0.55);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 20px; box-shadow: var(--shadow-lg); width: min(680px, 100%);
+    max-height: 86vh; overflow: auto; padding: 24px;
+  }
+  .modal h2 { margin: 0 0 4px; font-size: 20px; letter-spacing: -0.01em; }
+  .modal p.lead { margin: 0 0 18px; color: var(--text-soft); font-size: 14px; }
+  .tabs { display: flex; gap: 6px; background: var(--bg-soft); padding: 4px; border-radius: 11px; margin-bottom: 14px; }
+  .tab { flex: 1; text-align: center; padding: 9px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-soft); }
+  .tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+  pre.code {
+    margin: 0; background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px; overflow: auto; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-word;
+  }
+  .hint { font-size: 12.5px; color: var(--text-faint); margin: 12px 2px 0; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+
+  /* ---------- toast ---------- */
+  .toast {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: var(--bg); font-weight: 600; font-size: 13.5px;
+    padding: 12px 18px; border-radius: 999px; box-shadow: var(--shadow-lg);
+    opacity: 0; pointer-events: none; transition: all .22s; z-index: 60;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer.foot { max-width: var(--maxw); margin: 0 auto; padding: 8px 24px 40px; color: var(--text-faint); font-size: 12px; }
+  code.inline { font-family: var(--mono); background: var(--bg-soft); padding: 2px 6px; border-radius: 6px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow"><span class="dot"></span> Claude Code Plugin Catalog</span>
+      <h1>Find &amp; install plugins<br><span class="grad" id="mkt-name">your marketplace</span></h1>
+      <p class="sub">Search by name, tag, or keyword. Select what you need, then one click copies the exact install commands — paste into Claude Code and you're done.</p>
+      <div class="meta-row">
+        <span><b id="stat-total">0</b> plugins</span>
+        <span><b id="stat-installed">0</b> already installed</span>
+        <span>marketplace: <b id="stat-mkt">—</b></span>
+        <span id="stat-gen"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="controls-inner">
+      <div class="searchbar">
+        <div class="search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" type="search" placeholder="Search plugins — name, description, tag, author…" autocomplete="off" />
+        </div>
+        <select class="sort" id="sort">
+          <option value="name">Sort: A–Z</option>
+          <option value="installed">Sort: Installed first</option>
+          <option value="tags">Sort: Most tagged</option>
+        </select>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="resultline">
+      <span id="resultcount">—</span>
+      <button class="linkbtn" id="selectall">Select all shown</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">
+      <div class="big">🔍</div>
+      <div>No plugins match your search.</div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    Generated by <code class="inline">scripts/scan.mjs</code>. Re-run the <code class="inline">plugin-catalog</code> skill to refresh this catalog.
+  </footer>
+
+  <!-- sticky cart -->
+  <div class="cart" id="cart">
+    <div class="cart-count"><span id="cart-n">0</span> selected <small>· ready to install</small></div>
+    <div class="cart-spacer"></div>
+    <button class="btn btn-ghost" id="clear-sel">Clear</button>
+    <button class="btn btn-primary" id="install-btn">Install selected →</button>
+  </div>
+
+  <!-- modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2>Install <span id="modal-n">0</span> plugin(s)</h2>
+      <p class="lead">Copy this and paste it into your Claude Code session or terminal, from the project you want the plugins in.</p>
+      <div class="tabs">
+        <div class="tab active" data-mode="cli">CLI commands</div>
+        <div class="tab" data-mode="prompt">Claude prompt</div>
+      </div>
+      <pre class="code" id="code"></pre>
+      <p class="hint" id="hint"></p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="copy-btn">Copy to clipboard</button>
+        <button class="btn" id="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- catalog data (generated; works on file:// — no fetch) -->
+  <script src="data.js"></script>
+  <script>
+  (function () {
+    var CAT = (window.PLUGIN_CATALOG) || { marketplace: { name: "", addSource: "", description: "" }, plugins: [] };
+    var MKT = CAT.marketplace || {};
+    var PLUGINS = (CAT.plugins || []).map(function (p, i) { return Object.assign({ _i: i }, p); });
+
+    var state = { q: "", tags: new Set(), sort: "name", selected: new Set(), codeMode: "cli" };
+
+    // ---- elements ----
+    var $ = function (id) { return document.getElementById(id); };
+    var grid = $("grid"), empty = $("empty"), chipsEl = $("chips");
+
+    // ---- header ----
+    $("mkt-name").textContent = MKT.name || "your marketplace";
+    $("stat-total").textContent = PLUGINS.length;
+    $("stat-installed").textContent = PLUGINS.filter(function (p) { return p.installed; }).length;
+    $("stat-mkt").textContent = MKT.name || "—";
+    if (CAT.generatedAt) {
+      try { $("stat-gen").textContent = "updated " + new Date(CAT.generatedAt).toLocaleDateString(); } catch (e) {}
+    }
+
+    // ---- tag frequency for chips ----
+    var tagCounts = {};
+    PLUGINS.forEach(function (p) { (p.tags || []).forEach(function (t) { tagCounts[t] = (tagCounts[t] || 0) + 1; }); });
+    var topTags = Object.keys(tagCounts).sort(function (a, b) { return tagCounts[b] - tagCounts[a] || a.localeCompare(b); }).slice(0, 18);
+
+    function renderChips() {
+      chipsEl.innerHTML = "";
+      topTags.forEach(function (t) {
+        var c = document.createElement("button");
+        c.className = "chip" + (state.tags.has(t) ? " active" : "");
+        c.innerHTML = t + ' <span class="n">' + tagCounts[t] + "</span>";
+        c.onclick = function () { state.tags.has(t) ? state.tags.delete(t) : state.tags.add(t); render(); };
+        chipsEl.appendChild(c);
+      });
+      if (state.tags.size) {
+        var clr = document.createElement("button");
+        clr.className = "chip chip-clear";
+        clr.textContent = "clear filters ✕";
+        clr.onclick = function () { state.tags.clear(); render(); };
+        chipsEl.appendChild(clr);
+      }
+    }
+
+    // ---- filtering ----
+    function matchesQuery(p, q) {
+      if (!q) return true;
+      var hay = (p.name + " " + p.description + " " + (p.tags || []).join(" ") + " " + (p.category || "") + " " + (p.author || "")).toLowerCase();
+      return q.split(/\s+/).every(function (term) { return hay.indexOf(term) !== -1; });
+    }
+    function matchesTags(p) {
+      if (!state.tags.size) return true;
+      var set = new Set(p.tags || []);
+      for (var t of state.tags) if (!set.has(t)) return false; // AND semantics
+      return true;
+    }
+    function filtered() {
+      var q = state.q.trim().toLowerCase();
+      var list = PLUGINS.filter(function (p) { return matchesQuery(p, q) && matchesTags(p); });
+      if (state.sort === "name") list.sort(function (a, b) { return a.name.localeCompare(b.name); });
+      else if (state.sort === "installed") list.sort(function (a, b) { return (b.installed - a.installed) || a.name.localeCompare(b.name); });
+      else if (state.sort === "tags") list.sort(function (a, b) { return (b.tags || []).length - (a.tags || []).length || a.name.localeCompare(b.name); });
+      return list;
+    }
+
+    var CHECK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+    function render() {
+      renderChips();
+      var list = filtered();
+      $("resultcount").textContent = list.length + " of " + PLUGINS.length + " plugins";
+      grid.innerHTML = "";
+      empty.style.display = list.length ? "none" : "block";
+
+      list.forEach(function (p) {
+        var sel = state.selected.has(p._i);
+        var card = document.createElement("div");
+        card.className = "card" + (sel ? " selected" : "");
+        var tagsHtml = (p.tags || []).slice(0, 6).map(function (t) {
+          return '<span class="tag" data-tag="' + escapeAttr(t) + '">' + escapeHtml(t) + "</span>";
+        }).join("");
+        card.innerHTML =
+          (p.installed ? '<span class="badge-installed"><span class="dot"></span>Installed</span>' : "") +
+          '<div class="card-top">' +
+            '<div class="check">' + CHECK + "</div>" +
+            "<div style=\"min-width:0\"><h3>" + escapeHtml(p.name) + "</h3>" +
+            (p.author ? '<div class="author">by ' + escapeHtml(p.author) + (p.version ? ' · <span class="ver">v' + escapeHtml(p.version) + "</span>" : "") + "</div>" : (p.version ? '<div class="author"><span class="ver">v' + escapeHtml(p.version) + "</span></div>" : "")) +
+            "</div></div>" +
+          '<p class="desc">' + escapeHtml(p.description || "No description.") + "</p>" +
+          '<div class="tags">' + tagsHtml + "</div>";
+
+        card.onclick = function (e) {
+          var t = e.target.closest("[data-tag]");
+          if (t) { var tg = t.getAttribute("data-tag"); state.tags.has(tg) ? state.tags.delete(tg) : state.tags.add(tg); render(); return; }
+          toggle(p._i);
+        };
+        grid.appendChild(card);
+      });
+      updateCart();
+    }
+
+    function toggle(i) { state.selected.has(i) ? state.selected.delete(i) : state.selected.add(i); render(); }
+
+    function updateCart() {
+      var n = state.selected.size;
+      $("cart-n").textContent = n;
+      $("cart").classList.toggle("show", n > 0);
+    }
+
+    // ---- install command generation ----
+    function selectedPlugins() {
+      return [...state.selected].map(function (i) { return PLUGINS[i]; }).filter(Boolean)
+        .sort(function (a, b) { return a.name.localeCompare(b.name); });
+    }
+    function cliCommands() {
+      var mkt = MKT.name, src = MKT.addSource || mkt;
+      var lines = ["claude plugin marketplace add " + src];
+      selectedPlugins().forEach(function (p) {
+        lines.push("claude plugin install " + p.name + "@" + mkt + " --scope project");
+      });
+      return lines.join("\n");
+    }
+    function promptText() {
+      var names = selectedPlugins().map(function (p) { return p.name; }).join(", ");
+      return "Add the Claude Code marketplace `" + (MKT.addSource || MKT.name) +
+        "`, then install these plugins into this project with --scope project: " + names + ".";
+    }
+    function renderModalCode() {
+      if (state.codeMode === "cli") {
+        $("code").textContent = cliCommands();
+        $("hint").innerHTML = "Runs from the project directory you want the plugins in. <code class=\"inline\">marketplace add</code> is safe to re-run.";
+      } else {
+        $("code").textContent = promptText();
+        $("hint").textContent = "Paste this as a message to Claude Code — it will run the install for you.";
+      }
+    }
+
+    function openModal() {
+      if (!state.selected.size) return;
+      $("modal-n").textContent = state.selected.size;
+      renderModalCode();
+      $("overlay").classList.add("show");
+    }
+    function closeModal() { $("overlay").classList.remove("show"); }
+
+    // ---- clipboard + toast ----
+    function copy(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { toast("Copied to clipboard ✓"); }, fallbackCopy.bind(null, text));
+      } else { fallbackCopy(text); }
+    }
+    function fallbackCopy(text) {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Copied to clipboard ✓"); }
+      catch (e) { toast("Copy failed — select manually"); }
+      document.body.removeChild(ta);
+    }
+    var toastTimer;
+    function toast(msg) {
+      var t = $("toast"); t.textContent = msg; t.classList.add("show");
+      clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 1900);
+    }
+
+    // ---- escaping ----
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
+    function escapeAttr(s) { return escapeHtml(s); }
+
+    // ---- events ----
+    $("search").addEventListener("input", function (e) { state.q = e.target.value; render(); });
+    $("sort").addEventListener("change", function (e) { state.sort = e.target.value; render(); });
+    $("selectall").addEventListener("click", function () {
+      var list = filtered();
+      var allSel = list.every(function (p) { return state.selected.has(p._i); });
+      list.forEach(function (p) { allSel ? state.selected.delete(p._i) : state.selected.add(p._i); });
+      this.textContent = allSel ? "Select all shown" : "Deselect all shown";
+      render();
+    });
+    $("clear-sel").addEventListener("click", function () { state.selected.clear(); render(); });
+    $("install-btn").addEventListener("click", openModal);
+    $("close-btn").addEventListener("click", closeModal);
+    $("copy-btn").addEventListener("click", function () { copy($("code").textContent); });
+    $("overlay").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeModal();
+      if (e.key === "/" && document.activeElement !== $("search")) { e.preventDefault(); $("search").focus(); }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (tab) {
+      tab.addEventListener("click", function () {
+        document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
+        tab.classList.add("active"); state.codeMode = tab.getAttribute("data-mode"); renderModalCode();
+      });
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>

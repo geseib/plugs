@@ -1,0 +1,1 @@
+Introducing Plugin Catalog: a one-file, no-backend "app store" for Claude Code plugins. Search 235 plugins, select what you need, and one click drops the exact install commands into your clipboard. Search. Select. Shipped. 🧩

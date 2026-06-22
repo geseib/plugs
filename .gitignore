@@ -1,0 +1,15 @@
+# HyperFrames AI skill installs (machine-specific — reinstall with `npx hyperframes skills`)
+.agents/
+agent/
+skills-lock.json
+
+# Dependencies
+node_modules/
+
+# Generated / verification artifacts
+brag-output/composition/snapshots/
+brag-output/composition/.hyperframes/
+
+# OS / editor cruft
+.DS_Store
+*.log
