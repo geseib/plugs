@@ -257,6 +257,36 @@
 
   footer.foot { max-width: var(--maxw); margin: 0 auto; padding: 8px 24px 40px; color: var(--text-faint); font-size: 12px; }
   code.inline { font-family: var(--mono); background: var(--bg-soft); padding: 2px 6px; border-radius: 6px; font-size: 0.9em; }
+
+  /* ---------- watch-tour button + video lightbox ---------- */
+  .hero-actions { margin-top: 18px; }
+  .watch-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: inherit; font-weight: 600; font-size: 14px; cursor: pointer;
+    color: #fff; border: none; border-radius: 999px; padding: 11px 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: var(--shadow-sm); transition: filter .14s, transform .14s;
+  }
+  .watch-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .watch-btn .tri {
+    width: 0; height: 0; border-left: 10px solid #fff;
+    border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+  }
+  .vid-overlay {
+    position: fixed; inset: 0; z-index: 70; background: rgba(8, 9, 14, 0.82);
+    display: none; align-items: center; justify-content: center; padding: 28px;
+    backdrop-filter: blur(5px);
+  }
+  .vid-overlay.show { display: flex; }
+  .vid-box { position: relative; width: min(1040px, 100%); }
+  .vid-box video { width: 100%; display: block; border-radius: 16px; background: #000; box-shadow: var(--shadow-lg); }
+  .vid-close {
+    position: absolute; top: -54px; right: 0;
+    width: 44px; height: 44px; border-radius: 999px; cursor: pointer;
+    background: rgba(255, 255, 255, 0.12); color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22); font-size: 19px; line-height: 1;
+  }
+  .vid-close:hover { background: rgba(255, 255, 255, 0.22); }
 </style>
 </head>
 <body>
@@ -265,6 +295,9 @@
       <span class="eyebrow"><span class="dot"></span> Claude Code Plugin Catalog</span>
       <h1>Find &amp; install plugins<br><span class="grad" id="mkt-name">your marketplace</span></h1>
       <p class="sub">Search by name, tag, or keyword. Select what you need, then one click copies the exact install commands — paste into Claude Code and you're done.</p>
+      <div class="hero-actions">
+        <button class="watch-btn" id="watch-btn"><span class="tri"></span> Watch the 20-second tour</button>
+      </div>
       <div class="meta-row">
         <span><b id="stat-total">0</b> plugins</span>
         <span><b id="stat-installed">0</b> already installed</span>
@@ -334,6 +367,14 @@
   </div>
 
   <div class="toast" id="toast"></div>
+
+  <!-- video lightbox -->
+  <div class="vid-overlay" id="vid-overlay">
+    <div class="vid-box">
+      <button class="vid-close" id="vid-close" aria-label="Close video">✕</button>
+      <video id="brag-video" src="brag.mp4" controls playsinline preload="metadata"></video>
+    </div>
+  </div>
 
   <!-- catalog data (generated; works on file:// — no fetch) -->
   <script src="data.js"></script>
@@ -522,9 +563,17 @@
     $("copy-btn").addEventListener("click", function () { copy($("code").textContent); });
     $("overlay").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape") { closeModal(); closeVideo(); }
       if (e.key === "/" && document.activeElement !== $("search")) { e.preventDefault(); $("search").focus(); }
     });
+
+    // ---- video lightbox ----
+    var vidOverlay = $("vid-overlay"), bragVideo = $("brag-video");
+    function openVideo() { vidOverlay.classList.add("show"); try { bragVideo.currentTime = 0; bragVideo.play(); } catch (e) {} }
+    function closeVideo() { if (!vidOverlay) return; vidOverlay.classList.remove("show"); try { bragVideo.pause(); } catch (e) {} }
+    $("watch-btn").addEventListener("click", openVideo);
+    $("vid-close").addEventListener("click", closeVideo);
+    vidOverlay.addEventListener("click", function (e) { if (e.target === this) closeVideo(); });
     Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (tab) {
       tab.addEventListener("click", function () {
         document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
