@@ -1,0 +1,15 @@
+{
+  "name": "explain-code-spanish",
+  "description": "Explains code in both English and Spanish to support bilingual developer learning.",
+  "version": "1.0.0",
+  "author": {
+    "name": "mindmap"
+  },
+  "keywords": [
+    "documentation",
+    "education",
+    "bilingual",
+    "spanish",
+    "explain"
+  ]
+}

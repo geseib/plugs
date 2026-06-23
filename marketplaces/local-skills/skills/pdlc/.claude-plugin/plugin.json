@@ -1,0 +1,15 @@
+{
+  "name": "pdlc",
+  "description": "Orchestrates a three-phase product development lifecycle workflow (Product, Architecture, Build) with human decision gates on local HTML pages.",
+  "version": "1.0.0",
+  "author": {
+    "name": "pdlc"
+  },
+  "keywords": [
+    "workflow",
+    "orchestration",
+    "product",
+    "process",
+    "automation"
+  ]
+}

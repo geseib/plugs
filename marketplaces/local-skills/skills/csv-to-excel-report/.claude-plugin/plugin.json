@@ -1,0 +1,15 @@
+{
+  "name": "csv-to-excel-report",
+  "description": "Generates styled Excel reports from CSV data, merging transactions with targets and calculating KPIs into a formatted .xlsx workbook.",
+  "version": "1.0.0",
+  "author": {
+    "name": "myskills"
+  },
+  "keywords": [
+    "excel",
+    "csv",
+    "reporting",
+    "data",
+    "openpyxl"
+  ]
+}
