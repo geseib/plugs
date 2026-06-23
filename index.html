@@ -310,6 +310,7 @@
   <div class="controls">
     <div class="controls-inner">
       <div class="searchbar">
+        <select class="sort" id="mkt-switch" style="display:none" aria-label="Marketplace"></select>
         <div class="search-wrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
           <input id="search" type="search" placeholder="Search plugins — name, description, tag, author…" autocomplete="off" />
@@ -380,9 +381,20 @@
   <script src="data.js"></script>
   <script>
   (function () {
-    var CAT = (window.PLUGIN_CATALOG) || { marketplace: { name: "", addSource: "", description: "" }, plugins: [] };
-    var MKT = CAT.marketplace || {};
-    var PLUGINS = (CAT.plugins || []).map(function (p, i) { return Object.assign({ _i: i }, p); });
+    var RAW = window.PLUGIN_CATALOG || {};
+    // Normalize both shapes: new multi-marketplace { marketplaces:[...] }
+    // and the legacy single-marketplace { marketplace, plugins } (wrapped as one entry).
+    var MARKETPLACES;
+    if (RAW.marketplaces && RAW.marketplaces.length) {
+      MARKETPLACES = RAW.marketplaces;
+    } else if (RAW.marketplace || RAW.plugins) {
+      MARKETPLACES = [{ marketplace: RAW.marketplace, plugins: RAW.plugins, generatedAt: RAW.generatedAt }];
+    } else {
+      MARKETPLACES = [{ marketplace: { name: "", addSource: "", description: "" }, plugins: [] }];
+    }
+
+    // ---- per-marketplace (active) data; (re)built on switch ----
+    var CAT, MKT, PLUGINS, tagCounts, topTags;
 
     var state = { q: "", tags: new Set(), sort: "name", selected: new Set(), codeMode: "cli" };
 
@@ -390,19 +402,51 @@
     var $ = function (id) { return document.getElementById(id); };
     var grid = $("grid"), empty = $("empty"), chipsEl = $("chips");
 
-    // ---- header ----
-    $("mkt-name").textContent = MKT.name || "your marketplace";
-    $("stat-total").textContent = PLUGINS.length;
-    $("stat-installed").textContent = PLUGINS.filter(function (p) { return p.installed; }).length;
-    $("stat-mkt").textContent = MKT.name || "—";
-    if (CAT.generatedAt) {
-      try { $("stat-gen").textContent = "updated " + new Date(CAT.generatedAt).toLocaleDateString(); } catch (e) {}
+    function loadMarketplace(idx) {
+      CAT = MARKETPLACES[idx] || MARKETPLACES[0];
+      MKT = CAT.marketplace || {};
+      PLUGINS = (CAT.plugins || []).map(function (p, i) { return Object.assign({ _i: i }, p); });
+
+      // ---- header ----
+      $("mkt-name").textContent = MKT.name || "your marketplace";
+      $("stat-total").textContent = PLUGINS.length;
+      $("stat-installed").textContent = PLUGINS.filter(function (p) { return p.installed; }).length;
+      $("stat-mkt").textContent = MKT.name || "—";
+      $("stat-gen").textContent = "";
+      if (CAT.generatedAt) {
+        try { $("stat-gen").textContent = "updated " + new Date(CAT.generatedAt).toLocaleDateString(); } catch (e) {}
+      }
+
+      // ---- tag frequency for chips ----
+      tagCounts = {};
+      PLUGINS.forEach(function (p) { (p.tags || []).forEach(function (t) { tagCounts[t] = (tagCounts[t] || 0) + 1; }); });
+      topTags = Object.keys(tagCounts).sort(function (a, b) { return tagCounts[b] - tagCounts[a] || a.localeCompare(b); }).slice(0, 18);
     }
 
-    // ---- tag frequency for chips ----
-    var tagCounts = {};
-    PLUGINS.forEach(function (p) { (p.tags || []).forEach(function (t) { tagCounts[t] = (tagCounts[t] || 0) + 1; }); });
-    var topTags = Object.keys(tagCounts).sort(function (a, b) { return tagCounts[b] - tagCounts[a] || a.localeCompare(b); }).slice(0, 18);
+    function switchMarketplace(idx) {
+      // reset all view state before swapping the active marketplace
+      state.q = ""; state.tags.clear(); state.sort = "name"; state.selected.clear();
+      $("search").value = "";
+      $("sort").value = "name";
+      $("selectall").textContent = "Select all shown";
+      loadMarketplace(idx);
+      render();
+    }
+
+    // ---- marketplace switcher dropdown ----
+    var mktSwitch = $("mkt-switch");
+    MARKETPLACES.forEach(function (m, i) {
+      var opt = document.createElement("option");
+      opt.value = String(i);
+      opt.textContent = (m.marketplace && m.marketplace.name) || ("marketplace " + (i + 1));
+      mktSwitch.appendChild(opt);
+    });
+    if (MARKETPLACES.length > 1) {
+      mktSwitch.style.display = "";
+      mktSwitch.addEventListener("change", function (e) { switchMarketplace(Number(e.target.value)); });
+    }
+
+    loadMarketplace(0);
 
     function renderChips() {
       chipsEl.innerHTML = "";

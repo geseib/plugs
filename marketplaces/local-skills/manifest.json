@@ -1,0 +1,79 @@
+{
+  "marketplace": {
+    "name": "local-skills",
+    "addSource": "geseib/plugs",
+    "description": "Reusable skills discovered across local projects."
+  },
+  "plugins": [
+    {
+      "name": "dynamodb-single-table",
+      "description": "Designs DynamoDB tables using single table design with generic keys, co-located entities, and GSI overloading.",
+      "tags": ["aws", "dynamodb", "data-modeling", "database", "architecture"],
+      "category": "skill",
+      "author": "myskills",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/myskills/drafts/dynamodb-single-table"
+    },
+    {
+      "name": "nodejs-security",
+      "description": "Writes secure Node.js applications by default, applying OWASP Top 10 mitigations, input validation, and safe authentication.",
+      "tags": ["nodejs", "security", "owasp", "authentication", "backend"],
+      "category": "skill",
+      "author": "myskills",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/myskills/drafts/nodejs-security"
+    },
+    {
+      "name": "csv-to-excel-report",
+      "description": "Generates styled Excel reports from CSV data, merging transactions with targets and calculating KPIs into a formatted .xlsx workbook.",
+      "tags": ["excel", "csv", "reporting", "data", "openpyxl"],
+      "category": "skill",
+      "author": "myskills",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/myskills/drafts/csv-to-excel-report"
+    },
+    {
+      "name": "context-audit",
+      "description": "Analyzes all Claude Code context sources for conflicts, overlapping skill triggers, and ambiguity.",
+      "tags": ["claude-code", "meta", "context", "tooling", "audit"],
+      "category": "skill",
+      "author": "myskills",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/myskills/.claude/skills/context-audit"
+    },
+    {
+      "name": "pdlc",
+      "description": "Orchestrates a three-phase product development lifecycle workflow (Product, Architecture, Build) with human decision gates on local HTML pages.",
+      "tags": ["workflow", "orchestration", "product", "process", "automation"],
+      "category": "skill",
+      "author": "pdlc",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/pdlc/.claude/skills/pdlc"
+    },
+    {
+      "name": "speckit-specify",
+      "description": "Creates or updates a feature specification from a natural language feature description in a spec-kit project structure.",
+      "tags": ["spec-driven", "specification", "planning", "speckit", "workflow"],
+      "category": "skill",
+      "author": "learnsdd",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/learnsdd/.claude/skills/speckit-specify"
+    },
+    {
+      "name": "explain-code-spanish",
+      "description": "Explains code in both English and Spanish to support bilingual developer learning.",
+      "tags": ["documentation", "education", "bilingual", "spanish", "explain"],
+      "category": "skill",
+      "author": "mindmap",
+      "version": "1.0.0",
+      "installed": false,
+      "source": "/Users/georgeseib/Documents/projects/mindmap/.github/skills/explain_code_spanish"
+    }
+  ]
+}
