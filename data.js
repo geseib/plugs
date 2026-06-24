@@ -3921,9 +3921,9 @@ window.PLUGIN_CATALOG = {
     },
     {
       "marketplace": {
-        "name": "local-skills",
-        "addSource": "geseib/plugs",
-        "description": "Reusable skills discovered across local projects."
+        "name": "seibtribemarket",
+        "addSource": "geseib/seibtribemarket",
+        "description": "Seib Tribe Market — reusable Claude Code skills."
       },
       "plugins": [
         {

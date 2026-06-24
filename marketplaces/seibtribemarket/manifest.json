@@ -1,14 +1,20 @@
 {
   "marketplace": {
-    "name": "local-skills",
-    "addSource": "geseib/plugs",
-    "description": "Reusable skills discovered across local projects."
+    "name": "seibtribemarket",
+    "addSource": "geseib/seibtribemarket",
+    "description": "Seib Tribe Market — reusable Claude Code skills."
   },
   "plugins": [
     {
       "name": "dynamodb-single-table",
       "description": "Designs DynamoDB tables using single table design with generic keys, co-located entities, and GSI overloading.",
-      "tags": ["aws", "dynamodb", "data-modeling", "database", "architecture"],
+      "tags": [
+        "aws",
+        "dynamodb",
+        "data-modeling",
+        "database",
+        "architecture"
+      ],
       "category": "skill",
       "author": "myskills",
       "version": "1.0.0",
@@ -18,7 +24,13 @@
     {
       "name": "nodejs-security",
       "description": "Writes secure Node.js applications by default, applying OWASP Top 10 mitigations, input validation, and safe authentication.",
-      "tags": ["nodejs", "security", "owasp", "authentication", "backend"],
+      "tags": [
+        "nodejs",
+        "security",
+        "owasp",
+        "authentication",
+        "backend"
+      ],
       "category": "skill",
       "author": "myskills",
       "version": "1.0.0",
@@ -28,7 +40,13 @@
     {
       "name": "csv-to-excel-report",
       "description": "Generates styled Excel reports from CSV data, merging transactions with targets and calculating KPIs into a formatted .xlsx workbook.",
-      "tags": ["excel", "csv", "reporting", "data", "openpyxl"],
+      "tags": [
+        "excel",
+        "csv",
+        "reporting",
+        "data",
+        "openpyxl"
+      ],
       "category": "skill",
       "author": "myskills",
       "version": "1.0.0",
@@ -38,7 +56,13 @@
     {
       "name": "context-audit",
       "description": "Analyzes all Claude Code context sources for conflicts, overlapping skill triggers, and ambiguity.",
-      "tags": ["claude-code", "meta", "context", "tooling", "audit"],
+      "tags": [
+        "claude-code",
+        "meta",
+        "context",
+        "tooling",
+        "audit"
+      ],
       "category": "skill",
       "author": "myskills",
       "version": "1.0.0",
@@ -48,7 +72,13 @@
     {
       "name": "pdlc",
       "description": "Orchestrates a three-phase product development lifecycle workflow (Product, Architecture, Build) with human decision gates on local HTML pages.",
-      "tags": ["workflow", "orchestration", "product", "process", "automation"],
+      "tags": [
+        "workflow",
+        "orchestration",
+        "product",
+        "process",
+        "automation"
+      ],
       "category": "skill",
       "author": "pdlc",
       "version": "1.0.0",
@@ -58,7 +88,13 @@
     {
       "name": "speckit-specify",
       "description": "Creates or updates a feature specification from a natural language feature description in a spec-kit project structure.",
-      "tags": ["spec-driven", "specification", "planning", "speckit", "workflow"],
+      "tags": [
+        "spec-driven",
+        "specification",
+        "planning",
+        "speckit",
+        "workflow"
+      ],
       "category": "skill",
       "author": "learnsdd",
       "version": "1.0.0",
@@ -68,7 +104,13 @@
     {
       "name": "explain-code-spanish",
       "description": "Explains code in both English and Spanish to support bilingual developer learning.",
-      "tags": ["documentation", "education", "bilingual", "spanish", "explain"],
+      "tags": [
+        "documentation",
+        "education",
+        "bilingual",
+        "spanish",
+        "explain"
+      ],
       "category": "skill",
       "author": "mindmap",
       "version": "1.0.0",
