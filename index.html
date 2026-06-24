@@ -130,6 +130,8 @@
     background: var(--surface); border: 1px solid var(--border-strong);
     border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow-sm); cursor: pointer;
   }
+  .mkt-add-btn { display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; }
+  .mkt-add-btn svg { flex: 0 0 auto; }
 
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
   .chip {
@@ -311,6 +313,10 @@
     <div class="controls-inner">
       <div class="searchbar">
         <select class="sort" id="mkt-switch" style="display:none" aria-label="Marketplace"></select>
+        <button class="btn mkt-add-btn" id="mkt-add-btn" title="Get the command to connect this marketplace">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+          Add marketplace
+        </button>
         <div class="search-wrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
           <input id="search" type="search" placeholder="Search plugins — name, description, tag, author…" autocomplete="off" />
@@ -363,6 +369,20 @@
       <div class="modal-actions">
         <button class="btn btn-primary" id="copy-btn">Copy to clipboard</button>
         <button class="btn" id="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- marketplace "add" modal -->
+  <div class="overlay" id="mkt-overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2>Add the <span id="mkt-modal-name">marketplace</span> marketplace</h2>
+      <p class="lead">Run this once in Claude Code (or your terminal) to connect this marketplace. Safe to re-run.</p>
+      <pre class="code" id="mkt-code"></pre>
+      <p class="hint">Then install any plugin with <code class="inline">claude plugin install &lt;name&gt;@<span id="mkt-hint-name"></span> --scope project</code> — or pick plugins above and hit “Install selected”.</p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="mkt-copy-btn">Copy to clipboard</button>
+        <button class="btn" id="mkt-close-btn">Close</button>
       </div>
     </div>
   </div>
@@ -567,6 +587,18 @@
     }
     function closeModal() { $("overlay").classList.remove("show"); }
 
+    // ---- "add marketplace" modal (connect the selected marketplace) ----
+    function marketplaceAddCli() {
+      return "claude plugin marketplace add " + (MKT.addSource || MKT.name || "");
+    }
+    function openMktModal() {
+      $("mkt-modal-name").textContent = MKT.name || "this";
+      $("mkt-hint-name").textContent = MKT.name || "<marketplace>";
+      $("mkt-code").textContent = marketplaceAddCli();
+      $("mkt-overlay").classList.add("show");
+    }
+    function closeMktModal() { $("mkt-overlay").classList.remove("show"); }
+
     // ---- clipboard + toast ----
     function copy(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -606,8 +638,12 @@
     $("close-btn").addEventListener("click", closeModal);
     $("copy-btn").addEventListener("click", function () { copy($("code").textContent); });
     $("overlay").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
+    $("mkt-add-btn").addEventListener("click", openMktModal);
+    $("mkt-close-btn").addEventListener("click", closeMktModal);
+    $("mkt-copy-btn").addEventListener("click", function () { copy($("mkt-code").textContent); });
+    $("mkt-overlay").addEventListener("click", function (e) { if (e.target === this) closeMktModal(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { closeModal(); closeVideo(); }
+      if (e.key === "Escape") { closeModal(); closeMktModal(); closeVideo(); }
       if (e.key === "/" && document.activeElement !== $("search")) { e.preventDefault(); $("search").focus(); }
     });
 
